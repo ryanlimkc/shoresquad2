@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ShoreSquad - Beach Cleanup Community">
+    <title>ShoreSquad - Rally Your Crew</title>
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="css/styles.min.css" as="style">
+    <link rel="preload" href="js/app.min.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Current User and Time -->
+    <meta name="current-user" content="rllimkc05">
+    <meta name="current-time" content="2025-06-02 07:28:30">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading ShoreSquad...</p>
+    </div>
+
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">ShoreSquad</div>
+            <div class="user-info">
+                <span class="user-login">rllimkc05</span>
+                <time class="current-time">2025-06-02 07:28:30 UTC</time>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <section class="hero">
+            <h1>Make Waves of Change</h1>
+            <p class="subtitle">Join the movement to keep our beaches clean! 🌊</p>
+        </section>
+
+        <section id="weather" class="weather-section">
+            <h2>Beach Weather</h2>
+            <div class="weather-widget" aria-live="polite">
+                <div class="weather-loading">Fetching weather data...</div>
+            </div>
+        </section>
+
+        <section id="map" class="map-section">
+            <h2>Next Cleanup Location</h2>
+            <div class="google-map">
+                <iframe
+                    width="100%"
+                    height="450"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCwtMzVSLgH_QVI7oR9YBvCW6FmFd0u15Q
+                        &q=East+Coast+Park,Singapore
+                        &zoom=15">
+                </iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 ShoreSquad</p>
+            <p>Last updated: <time datetime="2025-06-02T07:28:30Z">2025-06-02 07:28:30 UTC</time></p>
+        </div>
+    </footer>
+
+    <!-- Tawk.to Chat Widget -->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/YOUR_TAWK_TO_ID/default';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+
+    <!-- Main Script -->
+    <script src="js/app.min.js" type="module"></script>
+</body>
+</html>
