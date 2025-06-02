@@ -1,156 +1,340 @@
-// ShoreSquad Application
-const CONFIG = {
-    API: {
-        NEA_WEATHER: 'https://api.data.gov.sg/v1/environment/24-hour-weather-forecast',
-        CACHE_DURATION: 300000 // 5 minutes
-    },
-    USER: {
-        login: 'rllimkc05',
-        timestamp: '2025-06-02 07:28:30'
-    }
-};
+/* Color Palette - Ocean Inspired
+ * Primary: #1DA1F2 (Ocean Blue)
+ * Secondary: #45D1FD (Light Blue)
+ * Accent: #2ECC71 (Eco Green)
+ * Background: #F5F8FA (Sand White)
+ * Text: #14171A (Deep Gray)
+ */
 
-// Cache management
-class Cache {
-    constructor(duration) {
-        this.duration = duration;
-        this.store = new Map();
-    }
+:root {
+    --color-primary: #1DA1F2;
+    --color-secondary: #45D1FD;
+    --color-accent: #2ECC71;
+    --color-background: #F5F8FA;
+    --color-text: #14171A;
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+}
 
-    set(key, value) {
-        this.store.set(key, {
-            value,
-            timestamp: Date.now()
-        });
-    }
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    get(key) {
-        const item = this.store.get(key);
-        if (!item) return null;
-        
-        const expired = Date.now() - item.timestamp > this.duration;
-        if (expired) {
-            this.store.delete(key);
-            return null;
-        }
-        
-        return item.value;
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+
+/* Accessibility & Interactive Elements */
+a:focus,
+button:focus {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
 
-// Weather Service
-class WeatherService {
-    constructor() {
-        this.cache = new Cache(CONFIG.API.CACHE_DURATION);
+/* Responsive Layout */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header & Navigation */
+.header {
+    background-color: var(--color-primary);
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 4rem 1rem;
+    background: linear-gradient(
+        to bottom right,
+        var(--color-primary),
+        var(--color-secondary)
+    );
+    color: white;
+}
+
+/* Map & Weather Containers */
+.map-container,
+.weather-container {
+    min-height: 400px;
+    margin: 2rem 0;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Previous CSS remains the same, adding new styles for map and weather */
+
+/* Map Styles */
+.google-map {
+    width: 100%;
+    height: 450px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.google-map iframe {
+    width: 100%;
+    height: 100%;
+}
+
+/* Weather Widget Styles */
+.weather-container {
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.weather-widget {
+    display: grid;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.weather-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.weather-loading {
+    color: var(--color-text);
+    font-style: italic;
+}
+
+.forecast-data {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.weather-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.current-time {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .google-map {
+        height: 350px;
     }
 
-    async getWeather() {
-        const cached = this.cache.get('weather');
-        if (cached) return cached;
+    .weather-widget {
+        padding: 0.5rem;
+    }
+}
+/* ShoreSquad Styles */
+:root {
+    /* Color Palette - Gen-Z Beach Theme */
+    --color-primary: #00B4D8;    /* Ocean Blue */
+    --color-secondary: #FFB703;  /* Sunny Yellow */
+    --color-accent: #2EC4B6;     /* Tropical Teal */
+    --color-background: #F8F9FA; /* Sand White */
+    --color-text: #023047;       /* Deep Ocean */
+    
+    /* Typography */
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 2rem;
+    --space-xl: 4rem;
+}
 
-        try {
-            const response = await fetch(CONFIG.API.NEA_WEATHER);
-            if (!response.ok) throw new Error('Weather API error');
-            
-            const data = await response.json();
-            this.cache.set('weather', data);
-            return data;
-        } catch (error) {
-            console.error('Weather fetch error:', error);
-            throw error;
-        }
+/* Reset & Base Styles */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    overflow-x: hidden;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--color-primary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Layout */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* Header */
+.header {
+    background-color: var(--color-primary);
+    padding: var(--space-md) 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: lightblue;
+}
+
+.user-info {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    color: white;
+}
+
+/* Weather Widget */
+.weather-section {
+    background: lightblue;
+    border-radius: 8px;
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weather-widget {
+    display: grid;
+    gap: var(--space-md);
+    padding: var(--space-md);
+}
+
+/* Map Section */
+.map-section {
+    background: white;
+    border-radius: 8px;
+    padding: var(--space-lg);
+    margin: var(--space-lg) 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.google-map {
+    width: 100%;
+    height: 450px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Footer */
+.footer {
+    background: var(--color-text);
+    color: white;
+    padding: var(--space-lg) 0;
+    margin-top: var(--space-xl);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    .user-info {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .google-map {
+        height: 300px;
     }
 }
 
-// UI Management
-class UI {
-    constructor() {
-        this.weatherWidget = document.querySelector('.weather-widget');
-        this.loadingOverlay = document.getElementById('loading-overlay');
-        this.timeDisplay = document.querySelector('.current-time');
-    }
-
-    showLoading() {
-        this.loadingOverlay.style.display = 'flex';
-    }
-
-    hideLoading() {
-        this.loadingOverlay.style.opacity = '0';
-        setTimeout(() => {
-            this.loadingOverlay.style.display = 'none';
-        }, 300);
-    }
-
-    updateWeather(data) {
-        const forecast = data.items[0].general;
-        const html = `
-            <div class="weather-card">
-                <div class="weather-info">
-                    <h3>Current Forecast</h3>
-                    <p>${forecast.forecast}</p>
-                    <p>Temperature: ${forecast.temperature.low}°C - ${forecast.temperature.high}°C</p>
-                    <p>Humidity: ${forecast.relative_humidity.low}% - ${forecast.relative_humidity.high}%</p>
-                    <p>Wind: ${forecast.wind.speed.low} - ${forecast.wind.speed.high} km/h</p>
-                </div>
-            </div>
-        `;
-        this.weatherWidget.innerHTML = html;
-    }
-
-    showError(message) {
-        const html = `
-            <div class="error-message">
-                <p>🚨 ${message}</p>
-                <button onclick="location.reload()">Retry</button>
-            </div>
-        `;
-        this.weatherWidget.innerHTML = html;
-    }
-
-    updateTime() {
-        const now = new Date();
-        this.timeDisplay.textContent = now.toISOString()
-            .replace('T', ' ')
-            .slice(0, 19) + ' UTC';
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
 
-// Main Application
-class App {
-    constructor() {
-        this.weather = new WeatherService();
-        this.ui = new UI();
-    }
-
-    async init() {
-        this.ui.showLoading();
-        
-        try {
-            // Start periodic updates
-            this.startTimeUpdates();
-            
-            // Load weather data
-            const weatherData = await this.weather.getWeather();
-            this.ui.updateWeather(weatherData);
-            
-        } catch (error) {
-            this.ui.showError('Could not load weather data. Please try again later.');
-        } finally {
-            this.ui.hideLoading();
-        }
-    }
-
-    startTimeUpdates() {
-        this.ui.updateTime();
-        setInterval(() => this.ui.updateTime(), 1000);
-    }
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
-
-// Initialize app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new App();
-    app.init();
-});
-
-// Export for testing
-export { App, WeatherService, UI, Cache };
